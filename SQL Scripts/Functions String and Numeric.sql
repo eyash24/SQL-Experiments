@@ -1,4 +1,4 @@
--- Functions
+-- Functions Part 1
 /*
 Built-in sql code that 
 - accepts an input value
@@ -152,4 +152,3 @@ SELECT
 SELECT 
 -10 as num,
 ABS(-10) as absolute_num
-
