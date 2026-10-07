@@ -1,4 +1,5 @@
 -- Joining Data
+USE MyDatabase;
 
 -- No join
 -- retreive all data from customers and orders as separate results
@@ -62,7 +63,7 @@ FROM customers
 FULL JOIN orders
 ON customers.id = orders.customer_id;
 
--- Anti Left Join
+-- Left Anti Join
 -- returns rows from left that have no match in right
 
 -- retrieve all customers who havent placed any order
@@ -72,3 +73,81 @@ FROM customers
 LEFT JOIN orders
 ON customers.id = orders.customer_id
 WHERE orders.customer_id is NUll;
+
+-- Right Anti Join
+-- returns rows from right that has no match in left
+
+-- retrieve all orders without matching customers
+SELECT 
+*
+FROM customers AS c
+RIGHT JOIN orders AS o
+ON c.id = o.customer_id
+WHERE c.id is NULL;
+
+
+SELECT 
+*
+FROM orders AS o
+LEFT JOIN customers AS c
+ON c.id = o.customer_id
+WHERE c.id is NULL;
+
+-- Full Anti Join 
+-- Returns rows that do not match in either tables
+
+-- retrieve customers without orders and orders without customers
+SELECT *
+FROM customers AS c
+FULL JOIN orders AS o
+ON c.id = o.customer_id
+WHERE 
+	c.id is NUll or o.customer_id is NUll;
+
+-- retrieve customers along with their orders but only for customers who have placed an order (wo inner join)
+SELECT *
+FROM customers AS c
+FULL JOIN orders AS o
+ON c.id = o.customer_id
+WHERE 
+	c.id is not NULL and o.customer_id is not NULL;
+
+SELECT *
+FROM customers AS c
+LEFT JOIN orders AS o
+ON c.id = o.customer_id
+WHERE o.customer_id is not NULL;
+
+-- Cross Join
+-- combines every row from left with every row from right, all possible combination
+-- cartesian join 
+
+-- generate all possible combinations of customers and orders
+SELECT *
+FROM customers 
+CROSS JOIN orders;
+
+
+-- Using salesDB retrieve list of all orders along with their customer, product and employee details 
+USE SalesDB;
+
+SELECT * FROM Sales.Customers;
+SELECT * FROM Sales.Employees;
+SELECT * FROM Sales.Products;
+SELECT * FROM Sales.Orders;
+SELECT * FROM Sales.OrdersArchive;
+
+SELECT 
+o.OrderID,
+c.FirstName AS Customer_name,
+p.Product,
+o.Sales,
+p.price,
+e.FirstName AS Saleperson_name
+FROM Sales.Orders AS o
+LEFT JOIN Sales.Products AS p
+ON o.ProductID = p.ProductID
+LEFT JOIN Sales.Customers AS c
+ON o.CustomerID = c.CustomerID
+LEFT JOIN Sales.Employees AS e
+ON o.SalesPersonID = e.EmployeeID
