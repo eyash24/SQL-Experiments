@@ -305,6 +305,12 @@ FROM Sales.Employees;
 
 -- DDL Tips
 -- Tip 21: Avoid data types VARCHAR and TEXT
+-- Tip 22: Avoid (MAX) unnecessarily large lengths in data types
+-- Tip 23: Use the NOT NULL contrails where applicable
+-- Tip 24: Ensure table has a clustered primary key 
+-- Tip 25: Create non-clustered index for frequently used foreign key 
+
+-- bad
 CREATE TABLE CustomerInfo (
 	CustomerID INT,
 	FirstName VARCHAR(MAX),
@@ -317,3 +323,28 @@ CREATE TABLE CustomerInfo (
 	CONSTRAINT FK_CustomersInfo_EmployeeID FOREIGN KEY (EmployeeID)
 		REFERENCES Sales.Employees(EmployeeID)
 )
+
+-- good
+CREATE TABLE CustomerInfo2 (
+	CustomerID INT PRIMARY KEY CLUSTERED,
+	FirstName VARCHAR(50) NOT NULL,
+	LastName VARCHAR(50) NOT NULL,
+	Country VARCHAR(50) NOT NULL,
+	TotalPurchases FLOAT,
+	Score INT,
+	BirthDate DATE,
+	EmployeeID INT,
+	CONSTRAINT FK_CustomersInfo_EmployeeID FOREIGN KEY (EmployeeID)
+		REFERENCES Sales.Employees(EmployeeID)
+)
+
+CREATE NONCLUSTERED INDEX idx_CustomerInfo2_EmployeeID
+ON CustomerInfo2 (EmployeeID);
+
+-- Indexing best practices
+-- Tip 26: Avoid over indexing
+-- Tip 27: Drop unsed indexes
+-- Tip 28: Update statistics (weekly)
+-- Tip 29: Reorganise and rebuild indexes (weekly)
+
+-- Tip 30: Partition large tables (facts) to improve performance
