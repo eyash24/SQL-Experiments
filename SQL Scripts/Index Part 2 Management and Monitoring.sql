@@ -90,6 +90,7 @@ JOIN sys.tables t
 ON s.object_id = t.object_id
 CROSS APPLY sys.dm_db_stats_properties(s.object_id, s.stats_id) as sp
 ORDER By t.name DESC, sp.modification_counter DESC;
+-- cross apply works like a for each loop sending each row of the left table (outer table) into a subquery / function and output the combined result
 
 -- update statisctics
 UPDATE STATISTICS Sales.Products PK_products; -- updates a single statistics
